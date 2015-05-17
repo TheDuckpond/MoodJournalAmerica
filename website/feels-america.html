@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" href="/static/img/thumbnails/flag_favicon.ico" type="image/x-icon">
+  <meta charset="utf-8">
+  <style>
+
+  /* TO  DO: clean to separate CSS file */
+
+  .style1 {font-size: 1px}
+
+  .legend {
+    font-size: 12px;
+  }
+  .q8-9{fill:rgb(26,152,80)}
+  .q7-9{fill:rgb(102,189,99)}
+  .q6-9{fill:rgb(166,217,106)}
+  .q5-9{fill:rgb(217,239,139)}
+  .q4-9{fill:rgb(255,255,191)}
+  .q3-9{fill:rgb(254,224,139)}
+  .q2-9{fill:rgb(253,174,97)} 
+  .q1-9{fill:rgb(244,109,67)}  
+  .q0-9{fill:rgb(215,48,39)} 
+
+  rect.selection {
+    stroke          : #333;
+    stroke-dasharray: 4px;
+    stroke-opacity  : 0.5;
+    fill            : transparent;
+  }
+
+  rect.cell-border {
+    stroke: #eee;
+    stroke-width:0.3px;   
+  }
+
+  rect.cell-selected {
+    stroke: rgb(51,102,153);
+    stroke-width:0.5px;   
+  }
+
+  rect.cell-hover {
+    stroke: #F00;
+    stroke-width:0.3px;   
+  }
+
+  text.mono {
+    font-size: 9pt;
+    font-family: Consolas, courier;
+    fill: #aaa;
+  }
+
+  text.text-selected {
+    fill: #000;
+  }
+
+  text.text-highlight {
+    fill: #c00;
+  }
+  text.text-hover {
+    fill: #00C;
+  }
+  #tooltip {
+    position: absolute;
+    width: 200px;
+    height: auto;
+    padding: 10px;
+    background-color: white;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+  }
+
+  #tooltip.hidden {
+    display: none;
+  }
+
+  #tooltip p {
+    margin: 0;
+    font-family: sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+  }
+
+  </style>
+  <title>America Feels Things</title>
+  <meta content= "America may be the greatest country in the world - but it still has feelings."
+  name="description">
+  <meta content="Wesleyan University Quantitative Analysis Center" name=
+  "author">
+  <link href="/static/css/journal.min.css" rel="stylesheet">
+  <link href="/static/css/nv.d3.css" rel="stylesheet">
+  <link href="/static/css/main.css" rel="stylesheet">
+</head>
+
+
+<body>
+  <div class="bs-component">
+  <div class="navbar navbar-default">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" a href="duckpond.wesleyan.edu">Duckpond</a>
+  </div>
+  <div class="navbar-collapse collapse navbar-responsive-collapse">
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Journal</a></li>
+      <li><a href="http://duckpond.wesleyan.edu/america-journal">About</a></li>
+      <li><a href="http://duckpond.wesleyan.edu/america-journal/blog">Blog</a></li>
+    </ul>
+  </div>
+</div>
+</div>
+
+
+  <div class="container">
+    <h2>Mood Journal 'Murica</h2>
+    <p class="muted">Mansoor Alam and Husam Abdul-Kafi | Updated Daily</p>
+    <div>
+      <div class="span4 offset4 pull-right" id="curDate"></div>
+      <div class="col-lg-12">
+        <h3> How is America Feeling today ? </h3>
+        <div align="center">
+          <h3 style="font-size:36px;" id="myP"></h3>
+        </div>
+        <h3> Mood Map</h3>
+
+<div class="clearfix">
+          <div id="news-choro"></div>
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
+              <label for="variableSelect" class="col-lg-6 control-label"><h4>Chart Options:</h4></label>
+              <div class="col-lg-6 pull-right">
+                <select class="form-control" id="variableSelect">
+                  <optgroup label="Geographic">
+                    <option>States</option>
+                    <option>Region</option>
+                    <option>Sub-Region</option>
+                  </optgroup>
+                  <optgroup label="Congress">
+                    <option>Congressional District</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+            <div class="clearfix">
+<!--<div class="row">-->
+        <h3> America's Priorities According to the Internet</h3>                  
+        <div id="gtrends">
+      </div>
+  <!--</div> -->
+      <h3> Topic Modelling </h3>
+      <div>
+      <img src="http://qacprojects.wesleyan.edu/static/data/twitter_project/tmp_data_test/topic_term_weights.png" alt="Using LDA" width="850" height="500" align="middle"></div>
+      <h3> Sørensen–Dice Coefficient of Similarity </h3>
+      <div class="row">
+        <p>
+Below is an adjacency matrix depicting the content similarity between front pages of various newspapers across states. Newspaper content was concatenated into a single string for each of the 50 glorious states of America and then created into a set of <a href="http://en.wikipedia.org/wiki/N-gram">4-grams</a>. The <a href="http://en.wikipedia.org/wiki/S%C3%B8rensen_similarity_index">Sørensen–Dice coefficient</a> is calculated between each set of 4-grams. The adjacency matrix plots the Sørensen–Dice coefficient where stronger opacities indicate greater relative similarity. The colors indicate states in the same region.  For example Arkansas, Louisiana, Oklahoma, and Texas are all part of the same West South Central region.  However, the colors don't indicate different similarity - a black square with an opacity of .25 has the same similarity as an orange square with an opacity of .25.
+</p>
+<aside style="margin-top:20px;">
+  <p>Order: <select id="order">
+    <option value="name">by Name</option>
+    <option value="count">by Frequency</option>
+    <option value="group">by Cluster</option>
+  </select>
+      <div id="adj_matrx" style='overflow:auto; width:960px; height:850px;'><svg></svg></div></div>
+<div class="col-md-10 row-md-4 center">
+  <h3> If America made a movie today... </h3>
+   <div id="movie-line"></div>
+  <blockquote>
+    <p id="markov_results"></p>
+  </blockquote>
+<h4>Surely, this one is headed to the Grammy's. </h4>
+</div>
+        <!-- </select> -->
+
+    <!-- note : loading JS files before the script code in the HTML file is ugly and affects performance. We can fix this later -->
+
+            <div class="clearfix">
+              <div class="col-md-10 row-md-4 center">
+    <h3> And how 'bout those grumpy legislators? </h3>
+    <div id="sentiment-volume" class="nv-chart">
+      <svg></svg>
+    </div>
+    </div>
+  </div>
+    <!-- currently inactive
+      <div class="btn-group" data-toggle="buttons-radio">
+        <button type="button" class="btn btn-hc-sent active">Hour</button>
+        <button type="button" class="btn btn-hc-sent">Day</button>
+      </div>
+    -->
+     <!-- <h3> issue chart w/ selection goes here </h3> -->
+
+     
+   <!--   <div id="hc-sent" class="nv=chart"><svg></svg></div> -->
+    </div>
+    <div class="clearfix">
+      <h2>What is this ?</h2>
+      <p>Being the greatest country in the world can be taxing on anybody and everybody. America is no different. As true patriots of this country, we have decided to compile a mood journal for America to better understand what she is thinking about, how she is thinking about it, and most importantly, how she feels about it. Read more <a href="http://www.duckpond.wesleyan.edu">here</a>.</p></div>
+      <p><font size="1">Our statements have not been evaluated by the Food and Drug Administration. Our data and analyses are not intended to diagnose, treat, cure or prevent any disease for this great country.</font></p>
+      <div class="footer">
+        <p>&copy; 2014 Wesleyan University</p>
+      </div>
+    
+
+    <!-- /container -->
+    <script src=
+    "http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script> 
+    <script src="/static/js/bootstrap/bootstrap.min.js"></script> 
+    <script src="/static/js/d3/d3.min.js"></script> 
+    <script src="/static/js/nvd3/nv.d3.min.js"></script> 
+    <script src="/static/js/topojson/topojson.js"></script> 
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+    <script src="/static/js/qac.js"></script>
+    <script src="/static/js/twitter-project.js"></script> 
+    <script src="/static/js/feels-america.js"></script> 
+    <script src="/static/js/saveAsPng.js"></script> 
+    <!--<script src="/static/js/d3.layout2.cloud.js"></script> -->
+    <script>
+    function pngOnClick(button_id,chart_svg,chart_name) {
+          $(button_id).click(function() { //save2
+            saveAsPng($(chart_svg)[0], chart_name +'.png');
+          });
+        }
+        </script>
+        <!--<script>pngOnClick("#news-choro","#news-choro svg","news-choropleth")</script> -->
+        <!--<script>pngOnClick("#heatmap","#heatmap svg","heatmap")</script> -->
+        <!--<script>pngOnClick("#second","#overall-volume svg","overall-volume") </script>-->
+        <script>
+
+/* 
+ ************** Don't mess with this !!! **************
+ This works, but TO DO: create as a function in feels-america.js
+ */
+ var variables = {
+
+  "States": {
+   property: "rate"
+ },
+ "Region": {
+   property: "rrate"
+ },
+ "Sub-Region": {
+   property:"srate"
+ },
+ "Congressional Districts": {
+   property:"crate"
+ }
+};
+
+d3.select("#variableSelect").on("change",e);
+e();
+
+function e() {
+
+ var m = d3.select("#variableSelect").property("value"),
+ k = variables[m];
+ var rateById = d3.map();
+ var width = 960,
+ height = 600,
+    log = d3.scale.log(), //move to log ?
+    quantize = d3.scale.quantize(),
+    numberIntervals = 6;
+
+    var quantize = d3.scale.quantize()
+        .domain([-5, 25]) // adjust as needed?
+        .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+
+        var projection = d3.geo.albersUsa()
+        .scale(1280)
+        .translate([width / 2, height / 2]);
+
+        var path = d3.geo.path()
+        .projection(projection);
+
+        var svg = d3.select("#news-choro").transition();
+
+        queue()
+        .defer(d3.json, "/static/data/us.json") //us2
+        .defer(d3.csv, "/static/data/twitter_project/tmp_data_test/news_sent_total.csv", function(d) { rateById.set(d.id, +d[k.property]); })
+        .await(ready);
+
+        function ready(error, us) {
+          svg
+          .attr("class", "states")
+          .selectAll("path")
+          .attr("class", function(d) { return quantize(rateById.get(d.id)); })
+          .attr("d", path);
+        }
+      }
+      </script>
+    </body>
+</html>
