@@ -675,6 +675,8 @@ function(error, data) {
 });
 }
 /******** Adjacency Matrix *********/
+// Adapted from Mike Bostock's Les Miserables Co-Occurence matrix
+// http://bost.ocks.org/mike/miserables/
 function adj_matrx(filename,id){
 
   var margin = {top: 80, right: 50, bottom: 10, left: 80},
