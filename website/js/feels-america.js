@@ -344,6 +344,39 @@ function e() {
 
 /******* end expiremental ***************/
 
+/* Heat Map Chart */
+function heatMapChart(filename,ref_id){
+
+var margin = { top: 150, right: 10, bottom: 50, left: 100 },
+  cellSize=12;
+  col_number=56;
+  row_number=56;
+  width = cellSize*col_number, // - margin.left - margin.right,
+  height = cellSize*row_number , // - margin.top - margin.bottom,
+  //gridSize = Math.floor(width / 24),
+  legendElementWidth = cellSize*2.5,
+  colorBuckets = 13,
+
+// colors = ['#005824','#1A693B','#347B53','#4F8D6B','#699F83','#83B09B','#9EC2B3','#B8D4CB','#D2E6E3','#EDF8FB','#FFFFFF','#F1EEF6','#E6D3E1','#DBB9CD','#D19EB9','#C684A4','#BB6990','#B14F7C','#A63467','#9B1A53','#91003F'];
+  colors = ['#ffffff','#ffeaed','#ffd4e3','#ffbfdf','#ffaae3','#ff95ed','#ff80ff','#e66aff','#c655ff','#9f40ff','#712bff','#3c15ff','#0000ff'],
+  //colors = ['#ffffff','#eaeaea','#d4d4d4','#bfbfbf','#aaaaaa','#959595','#808080','#6a6a6a','#555555','#404040','#2b2b2b','#151515','#000000'];
+  hcrow = [53, 51, 10, 11, 55, 54, 15, 12, 56, 33, 34, 35, 48, 22, 37, 38, 31, 47, 36, 42, 06, 32, 72, 66, 08, 78, 02, 01, 60, 05, 50, 17, 13, 18, 19, 40, 04, 16, 09, 23, 24, 25, 39, 49, 29, 27, 26, 44, 20, 30, 69, 28, 45, 21, 41, 46], // change to gene name or probe id
+  hccol = [53, 51, 10, 11, 55, 54, 15, 12, 56, 33, 34, 35, 48, 22, 37, 38, 31, 47, 36, 42, 06, 32, 72, 66, 08, 78, 02, 01, 60, 05, 50, 17, 13, 18, 19, 40, 04, 16, 09, 23, 24, 25, 39, 49, 29, 27, 26, 44, 20, 30, 69, 28, 45, 21, 41, 46], // change to gene name or probe id
+  rowLabel =  [ 'WA', 'VA', 'DE', 'DC', 'WI', 'WV', 'HI', 'FL', 'WY', 'NH', 'NJ', 'NM', 'TX', 'LA', 'NC', 'ND', 'NE', 'TN', 'NY', 'PA', 'CA', 'NV', 'PR', 'GU', 'CO', 'VI', 'AK', 'AL', 'AS', 'AR', 'VT', 'IL', 'GA', 'IN', 'IA', 'OK', 'AZ', 'ID', 'CT', 'ME', 'MD', 'MA', 'OH', 'UT', 'MO', 'MN', 'MI', 'RI', 'KS', 'MT', 'MP', 'MS', 'SC', 'KY', 'OR', 'SD'], // change to gene name or probe id
+  colLabel =  [ 'WA', 'VA', 'DE', 'DC', 'WI', 'WV', 'HI', 'FL', 'WY', 'NH', 'NJ', 'NM', 'TX', 'LA', 'NC', 'ND', 'NE', 'TN', 'NY', 'PA', 'CA', 'NV', 'PR', 'GU', 'CO', 'VI', 'AK', 'AL', 'AS', 'AR', 'VT', 'IL', 'GA', 'IN', 'IA', 'OK', 'AZ', 'ID', 'CT', 'ME', 'MD', 'MA', 'OH', 'UT', 'MO', 'MN', 'MI', 'RI', 'KS', 'MT', 'MP', 'MS', 'SC', 'KY', 'OR', 'SD']; // change to contrast name
+
+d3.csv(dataDirectory + filename, // should be heatmap.csv or something
+function(d) { // i don't like this part of javascript, but "d" is a reference to the object (data) preceding it
+  return {
+    row:   d.state1, // we use "+"value to ensure JS reads value as numeric, also d["state1"] returns same result but dont do it
+    col:   d.state2,
+    value: +d.jaccard
+  };
+},
+
+
+
+
 // note the open paren on 121, that stays open until we no longer need to be within scope of the data
 
 function(error, data) {
